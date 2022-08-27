@@ -1,0 +1,23 @@
+created:
+    - app/Http/Controllers/ProductController.php
+    - database/factories/UserFactory.php
+    - database/factories/InvoiceFactory.php
+    - database/factories/ProductFactory.php
+    - database/migrations/2022_08_27_125324_create_users_table.php
+    - database/migrations/2022_08_27_125325_create_invoices_table.php
+    - database/migrations/2022_08_27_125326_create_products_table.php
+    - database/migrations/2022_08_27_125327_create_invoice_product_table.php
+    - app/Models/User.php
+    - app/Models/Invoice.php
+    - app/Models/Product.php
+    - tests/Feature/Http/Controllers/ProductControllerTest.php
+    - app/Http/Requests/ProductStoreRequest.php
+    - app/Notification/ProductStoreNotification.php
+    - resources/views/products/index.blade.php
+    - resources/views/products/show.blade.php
+updated:
+    - routes/web.php
+models:
+    User: { relationships: { hasMany: 'Invoice, Product' } }
+    Invoice: { invoice_number: 'string:100', total: 'decimal:8,2 unsigned', status: 'enum:failed,successful,pending', user_id: 'id foreign', relationships: { belongsTo: User, belongsToMany: Product } }
+    Product: { title: 'string:100', slug: 'string:100', price: 'integer unsigned', user_id: 'id foreign', is_available: 'boolean default:true', relationships: { belongsTo: User, belongsToMany: Invoice } }

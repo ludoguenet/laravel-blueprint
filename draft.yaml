@@ -1,0 +1,39 @@
+models:
+  User:
+    relationships:
+      hasMany: Invoice, Product
+
+  Invoice:
+    invoice_number: string:100
+    total: decimal:8,2 unsigned
+    status: enum:failed,successful,pending
+    user_id: id foreign
+    relationships:
+      belongsTo: User
+      belongsToMany: Product
+
+  Product:
+    title: string:100
+    slug: string:100
+    price: integer unsigned
+    user_id: id foreign
+    is_available: boolean default:true
+    relationships:
+      belongsTo: User
+      belongsToMany: Invoice
+
+controllers:
+  Product:
+    index:
+      query: all
+      render: products.index with:products
+
+    show:
+      render: products.show with:product
+
+    store:
+      validate: title, price, is_available
+      save: product
+      send: ProductStoreNotification to:product.user with:product
+      redirect: products.index
+
